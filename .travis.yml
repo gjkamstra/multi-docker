@@ -1,0 +1,20 @@
+sudo: requiredservices:
+     - docker
+
+before_install:
+    - docker build -t gkamstra/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+    - docker run gkamstra/react-test npm test -- --coverage
+
+after_success:
+    - docker build -t gkamstra/multi-client -f ./client
+    - docker build -t gkamstra/multi-nginx -f ./nginx
+    - docker build -t gkamstra/multi-server -f ./server
+    - docker build -t gkamstra/multi-worker -f ./worker
+    - echo "$DOCKER_ACCESS_TOKEN" |docker login --username gkamstra  --password-stdin
+    - docker push gkamstra/multi-client
+    - docker push gkamstra/multi-nginx 
+    - docker push gkamstra/multi-server
+    - docker push gkamstra/multi-worker
+    
