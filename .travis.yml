@@ -1,4 +1,5 @@
-sudo: requiredservices:
+sudo: required
+services:
      - docker
 
 before_install:
@@ -17,4 +18,3 @@ after_success:
     - docker push gkamstra/multi-nginx 
     - docker push gkamstra/multi-server
     - docker push gkamstra/multi-worker
-    
